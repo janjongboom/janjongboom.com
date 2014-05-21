@@ -1,0 +1,47 @@
+html, body {
+  font-family: "Feura Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body > h1 {
+  margin: 0;
+  padding: 1rem;
+  background: black;
+  color: white;
+  font-weight: lighter;
+  text-align: right;
+}
+
+body > * {
+  margin: 1rem 1rem;
+}
+
+body > p, li {
+  line-height: 2.1rem;
+  font-size: 1.2rem;
+}
+
+iframe {
+  border: 0;
+}
+
+a {
+  color: #FF9500;
+}
+
+a:visited {
+  color: #e66000;
+}
+
+h2 {
+  border-top: solid 1px lightgray;
+  padding-top: 1.7rem;
+  color: #00539F;
+  font-weight: 400;
+  font-size: 2rem;
+}
+
+#say li span, #conf li span {
+  font-weight: lighter;
+}
