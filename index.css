@@ -21,6 +21,11 @@ body > * {
   margin: 1rem auto;
 }
 
+body > p, body > h2 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 body > p, li {
   line-height: 2.1rem;
   font-size: 1.2rem;
