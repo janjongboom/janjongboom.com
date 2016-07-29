@@ -33,6 +33,7 @@ li {
 
 iframe {
   border: 0;
+  max-width: 100% !important;
 }
 
 a {
