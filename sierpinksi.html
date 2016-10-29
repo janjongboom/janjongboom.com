@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Triangle</title>
+  <style>
+    /* Fill the whole screen, canvas normally rendered as inline-block;
+       but want to use block scope here, as it's only element */
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+    canvas {
+      display: block;
+    }
+  </style>
+  <script src="https://rawgit.com/mrdoob/stats.js/master/build/stats.min.js"></script>
+</head>
+
+<body>
+  <canvas id="drawing-area"></canvas>
+  <script>
+    // BUG: Zooming too much breaks the view because zoomLevel goes over
+    //      Number.MAX_SAFE_INTEGER
+
+    // Use full canvas
+    var c = document.querySelector('#drawing-area');
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+
+    // As the triangle has 3 same sides, use pythagoras to determine height
+    var HEIGHT = Math.sqrt(Math.pow(1, 2) - Math.pow(0.5, 2));
+    // Minimum number of pixels one side of triangle has to have before drawn
+    var MIN_PIXELS = 5;
+
+    // zoomLevel is in pixels
+    var zoomLevel = (c.width > c.height ? c.height : c.width);
+    // center the triangle on screen
+    var panningX = (c.width / 2) - (0.5 * zoomLevel);
+    var panningY = (c.height / 2) - (HEIGHT * 0.5 * zoomLevel);
+    // user panning stored here
+    var pannedX = 0, pannedY = 0;
+
+    var ctx = c.getContext('2d');
+
+    // draws a triangle at x, y (left bottom corner coordinate)
+    function drawTriangle(x, y, size, color, inner) {
+      var path = new Path2D();
+
+      // calculate the size on screen based on zoom
+      x *= zoomLevel;
+      y *= zoomLevel;
+      size *= zoomLevel;
+
+      // and based on user panning
+      x += panningX + pannedX;
+      y += panningY + pannedY;
+
+      // see if we have to render the triangle (outer always renders)
+      if (inner) {
+        // size not big enough...
+        if (size < MIN_PIXELS) return false;
+        // falls out of viewport and children will also fall out
+        if (x + (size * 2) < 0 || x - (size * 2) > c.width) return false;
+        if (y + (size * 2) < 0 || y - (size * 2) > c.height) return false;
+        // falls out of viewport, but maybe children need to be rendered
+        if (x + size < 0 || x - size > c.width) return true;
+        if (y + size < 0 || y - size > c.height) return true;
+      }
+
+      path.moveTo(x, y);
+      path.lineTo(x + size, y);
+
+      // again pythagoras to draw the triangle
+      var b = Math.sqrt(Math.pow(size, 2) - Math.pow(size/2, 2));
+      // outer has point up, inner has point down
+      var newY = !inner ? y - b : y + b;
+      path.lineTo(x + (size / 2), newY);
+
+      ctx.fillStyle = color;
+      ctx.fill(path);
+    }
+
+    // use HSL (color wheel) to determine color based on depth
+    function getColor(depth) {
+      return 'hsla(' + (depth * 8 % 255) + ', ' + 100 + '%, 50%, 1)';
+    }
+
+    // nextIteration determines the four triangles, renders the center one
+    // and returns the others (top, left, right) for further processing
+    function nextIteration(x, y, size, depth) {
+      var b = Math.sqrt(Math.pow(size, 2) - Math.pow(size/2, 2));
+
+      // draw the center one
+      var t = drawTriangle(x + .25 * size, y - .5 * b, .5 * size,
+                           getColor(depth), true);
+      // no need to check children?
+      if (t === false) return [];
+
+      return [
+        [ x + .25 * size, y - .5 * b, .5 * size ], // top
+        [ x, y, .5 * size ], // left
+        [ x + .5 * size, y, .5 * size ] // right
+      ];
+    }
+
+    // draw takes in a number of triangles, calls nextIteration on them
+    // and returns the inner triangles to check back
+    function draw(triangles, depth) {
+      return triangles.reduce(function(curr, triangle) {
+        curr.push.apply(curr, nextIteration(triangle[0], triangle[1],
+                                            triangle[2], depth));
+        return curr;
+      }, []);
+    }
+
+    var frameLoopDirty = true;
+    function renderFrame() {
+      if (!frameLoopDirty) return requestAnimationFrame(renderFrame);
+
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      // draw base triangle
+      drawTriangle(0, HEIGHT, 1, 'black');
+
+      console.time('Draw');
+      var d = [ [ 0, HEIGHT, 1 ] ]; // base triangle position on screen (0..1)
+
+      var depth = 0;
+      while(true) {
+        if (!d.length) break;
+
+        d = draw(d, ++depth);
+        // you can limit depth based on triangles shown for better framerate
+        // if (d.length > 1000) break;
+      }
+
+      console.timeEnd('Draw');
+
+      frameLoopDirty = false;
+
+      requestAnimationFrame(renderFrame);
+    }
+
+    // kick off by rendering first frame. after that requestAnimFrame is used
+    renderFrame();
+
+    // Zooming through wheel function
+    document.addEventListener('wheel', function(e) {
+      e.preventDefault();
+
+      // wheel < 0, zoom in, otherwise zoom out
+      var adj = e.deltaY < 0 ? 1.1 : (1 / 1.1);
+
+      zoomLevel *= adj;
+      pannedX *= adj;
+      pannedY *= adj;
+
+      // Keep base panningX & Y
+      panningX = (c.width / 2) - (0.5 * zoomLevel);
+      panningY = (c.height / 2) - (HEIGHT * 0.5 * zoomLevel);
+
+      // Render the next frame
+      frameLoopDirty = true;
+    });
+
+    // Panning by holding mouse down and moving
+    var lx = 0, ly = 0;
+    document.addEventListener('mousedown', function(e) {
+      lx = e.clientX;
+      ly = e.clientY;
+      document.addEventListener('mousemove', pan);
+    });
+    document.addEventListener('mouseup', function(e) {
+      document.removeEventListener('mousemove', pan);
+    });
+
+    function pan(e) {
+      pannedX += (e.clientX - lx);
+      pannedY += (e.clientY - ly);
+
+      lx = e.clientX;
+      ly = e.clientY;
+
+      frameLoopDirty = true;
+    }
+
+    // mrdoobs fps tracker
+    if ('Stats' in window) {
+      var stats = new Stats();
+      stats.domElement.style.cssText = 'position:fixed;left:0;top:0;z-index:10000';
+      document.body.appendChild(stats.domElement);
+      requestAnimationFrame(function loop() {
+        stats.update();
+        requestAnimationFrame(loop)
+      });
+    }
+  </script>
+</body>
+</html>
