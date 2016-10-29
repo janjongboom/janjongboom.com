@@ -19,7 +19,6 @@ body > p, body > h2 {
 body > p, li {
   line-height: 1.9rem;
   font-size: 1rem;
-  text-align: justify;
 }
 
 p {
