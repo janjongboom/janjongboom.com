@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/janjongboom_ei
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://janjongboom.com
+  * I am janjongboom_ei (https://keybase.io/janjongboom_ei) on keybase.
+  * I have a public key ASBw8qHhTjPwmtNwu1g_Aqjb5STs958rb5JFtxrorS7hwAo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "012070f2a1e14e33f09ad370bb583f02a8dbe524ecf79f2b6f9245b71ae8ad2ee1c00a",
+      "host": "keybase.io",
+      "kid": "012070f2a1e14e33f09ad370bb583f02a8dbe524ecf79f2b6f9245b71ae8ad2ee1c00a",
+      "uid": "6b3d20df7cf4036ced39706147ff9019",
+      "username": "janjongboom_ei"
+    },
+    "merkle_root": {
+      "ctime": 1574210329,
+      "hash": "4927960e0826a7804a1636958e9f8c9b322cf56570d996b2e3672118c3d1b78f9bccfb1062282757c9c584a3b231e1af99894cc2c8a111dca1ec6bc2085395ca",
+      "hash_meta": "eb73004c5cbedbb019b3cdb80cea9ae72c4e04da3caee7d45b16a3839d99688a",
+      "seqno": 10270067
+    },
+    "service": {
+      "entropy": "B7/0tbEC7iA9hIggfsFT+ik4",
+      "hostname": "janjongboom.com",
+      "protocol": "http:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "5.0.0"
+  },
+  "ctime": 1574210335,
+  "expire_in": 504576000,
+  "prev": "18a964a900854e980c8fa53a0b9447daa13f17be5308e67f923888ac73c2faad",
+  "seqno": 5,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgcPKh4U4z8JrTcLtYPwKo2+Uk7PefK2+SRbca6K0u4cAKp3BheWxvYWTESpcCBcQgGKlkqQCFTpgMj6U6C5RH2qE/F75TCOZ/kjiIrHPC+q3EIN+RxabblDScqzG/rtn8GpYLk7X500JjCoJR+0kMQfkDAgHCo3NpZ8RAfMtTa0RuD1zgfF2BOuor1nBxfGx6/vQB3tMII/IxrYfe4NsoU5WkeQfm7bGtf9dkJ+Jh+R/Yc77bC+DyssdmCKhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIJo+L+e3LsmuBLM3hr7jiug55786DiEMXsjRrCpDlvTro3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/janjongboom_ei
+
+==================================================================
